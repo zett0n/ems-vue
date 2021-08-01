@@ -1,5 +1,7 @@
 package cn.edu.zjut.entity;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -7,7 +9,7 @@ import lombok.Data;
  * @date 2021/7/10 22:36
  */
 @Data
-public class Emp {
+public class Emp implements Serializable {
     private Integer id;
     private String name;
     private String path;

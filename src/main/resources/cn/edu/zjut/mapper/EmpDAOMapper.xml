@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.zjut.dao.EmpDAO">
+
+    <cache type="cn.edu.zjut.cache.RedisCache"/>
+
     <select id="findAll" resultType="Emp">
         select *
         from t_emp;
@@ -22,7 +25,7 @@
         from t_emp
         where id = #{id};
     </delete>
-    
+
     <update id="update" parameterType="Emp">
         update t_emp
         set name   = #{name},

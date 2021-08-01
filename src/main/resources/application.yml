@@ -15,6 +15,10 @@ spring:
     # 开放外部访问入口
     resources:
       static-locations: classpath:/static, file:${photo.dir}
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
 
 mybatis:
   mapper-locations: classpath:cn/edu/zjut/mapper/*.xml
