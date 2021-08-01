@@ -1,0 +1,29 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /ems-vue
+spring:
+  application:
+    name: ems-vue
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ems-vue?characterEncoding=UTF-8
+    username: root
+    password: password
+  web:
+    # 开放外部访问入口
+    resources:
+      static-locations: classpath:/static, file:${photo.dir}
+
+mybatis:
+  mapper-locations: classpath:cn/edu/zjut/mapper/*.xml
+  type-aliases-package: cn.edu.zjut.entity
+
+logging:
+  level:
+    cn.edu.zjut: debug
+
+# 前端可以直接通过 context-path 访问 photo 文件夹下的文件（需要上文static-locations配置）
+photo:
+  dir: /Users/zett0n/OneDrive/work-space/Java/ems-vue/src/main/resources/static/photo

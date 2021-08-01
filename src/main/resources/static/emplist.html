@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+	<title>emplist</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+
+<body>
+	<div id="wrap">
+		<div id="top_content">
+			<div id="header">
+				<div id="rightheader">
+					<p>
+						2021/8/1
+						<br />
+						<a href="javascript:;" @click="logout">安全退出</a>
+					</p>
+				</div>
+				<div id="topheader">
+					<h1 id="title">
+						<a href="emplist.html">main</a>
+					</h1>
+				</div>
+				<div id="navigation">
+				</div>
+			</div>
+			<div id="content">
+				<p id="whereami"></p>
+				<!-- <h1>Welcome {{ user.realname }}!</h1> -->
+				<h1 v-text="'Welcome ' + user.realname + ' !'"></h1>
+				<table class="table">
+					<tr class="table_header">
+						<td>ID</td>
+						<td>Name</td>
+						<td>Photo</td>
+						<td>Salary</td>
+						<td>Age</td>
+						<td>Operation</td>
+					</tr>
+					<tr v-for="(emp,index) in emps" :key="emp.id" :class="index%2==0?'row1':'row2'">
+						<td>
+							{{emp.id}}
+						</td>
+						<td>
+							{{emp.name}}
+						</td>
+						<td>
+							<img :src="emp.path" style="height: 40px;">
+						</td>
+						<td>
+							{{emp.salary}}
+						</td>
+						<td>
+							{{emp.age}}
+						</td>
+						<td>
+							<a href="javascript:;" @click="delEmp(emp.id)">delete emp</a>&nbsp;
+							<a :href="'updateEmp.html?id=' + emp.id">update emp</a>
+						</td>
+					</tr>
+				</table>
+				<p>
+					<input type="button" class="button" value="Add Employee" onclick="location='addEmp.html'" />
+				</p>
+			</div>
+		</div>
+		<div id="footer">
+			<div id="footer_bg">
+				zett0n@zjut.edu.cn
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
+<script src="/ems-vue/js/vue.js"></script>
+<script src="/ems-vue/js/axios.min.js"></script>
+<script>
+	var instance = axios.create({
+		baseURL: "http://localhost:8088/ems-vue/emp",
+		timeout: 5000
+	})
+
+	var app = new Vue({
+		el: "#wrap",
+		data: {
+			user: {
+				realname: "",
+			},
+			emps: [],
+		},
+		methods: {
+			//处理安全退出
+			logout() {
+				localStorage.removeItem("user");
+				//刷新页面
+				// location.reload(true);
+				location.href = "login.html";
+			},
+			//删除员工信息方法
+			delEmp(id) {
+				if (window.confirm("确定要删除这条员工信息吗?")) {
+					instance.get("/delete?id=" + id).then(res => {
+						if (res.data.state) {
+							// alert(res.data.msg + ",点击确定刷新数据!");
+							this.findAll();
+						} else {
+							alert(res.data.msg);
+						}
+					});
+				}
+			},
+			//查询员工列表方法
+			findAll() {
+				instance.get("/findAll").then(res => {
+					this.emps = res.data;
+				});
+			}
+		},
+		//生命周期函数
+		created() {
+			var userString = localStorage.getItem("user");
+			if (userString) {
+				this.user = JSON.parse(userString);
+			} else {
+				alert("您尚未登录,点击确定跳转至登录页面!");
+				location.href = "login.html";
+			}
+			//查询所有信息
+			this.findAll();
+		}
+	});
+</script>
