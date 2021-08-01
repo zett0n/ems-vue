@@ -72,7 +72,6 @@ public class EmpController {
         log.debug("修改的员工信息：[{}]", emp.toString());
 
         Map<String, Object> map = new HashMap<>();
-
         try {
             if (photo != null && photo.getSize() != 0) {
                 // 头像处理

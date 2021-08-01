@@ -32,6 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### project ###
-*.jpg
+### my settings ###
+photo/
 .DS_Store
