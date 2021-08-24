@@ -28,10 +28,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
     @GetMapping("/getVerifyCode")
     public String getVerifyCode(HttpServletRequest request) throws IOException {
         String code = VerifyCodeUtils.generateVerifyCode(4);
-        request.getServletContext().setAttribute("code", code);
+        // request.getServletContext().setAttribute("code", code);
+        this.httpServletRequest.getSession().setAttribute("code", code);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         VerifyCodeUtils.outputImage(220, 60, byteArrayOutputStream, code);
@@ -49,7 +53,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>();
 
         try {
-            String key = (String)request.getServletContext().getAttribute("code");
+            // String key = (String)request.getServletContext().getAttribute("code");
+            String key = (String)this.httpServletRequest.getSession().getAttribute("code");
             if (key.equalsIgnoreCase(code)) {
                 this.userService.register(user);
                 map.put("state", true);
@@ -67,7 +72,7 @@ public class UserController {
 
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody User user) {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();      
 
         try {
             User userDB = this.userService.login(user);
